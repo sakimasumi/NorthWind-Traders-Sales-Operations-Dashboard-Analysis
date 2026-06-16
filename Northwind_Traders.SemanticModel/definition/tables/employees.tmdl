@@ -1,0 +1,119 @@
+table employees
+	lineageTag: 4710240c-801b-41cd-a59f-667825396948
+
+	measure employees = DISTINCTCOUNT(employees[employeeID])
+		formatString: 0
+		lineageTag: 97a705f9-1ee6-4ce9-a06f-f5ae73f89424
+
+	measure EmployeesTooltip = ```
+			
+			VAR EmpCount = DISTINCTCOUNT('employees'[employeeID])
+			VAR TopPerformerName = 
+			    TOPN(
+			        1,
+			        ALLSELECTED('employees'[employeeName]),
+			        [Total Revenue],
+			        DESC
+			    )
+			VAR TopPerformer = CONCATENATEX(TopPerformerName, 'employees'[employeeName], ", ")
+			VAR RevenuePerEmp = DIVIDE([Total Revenue], EmpCount, 0)
+			RETURN
+			"Revenue per employee: " & FORMAT(RevenuePerEmp, "$#,##0") & UNICHAR(10) &
+			"Top Performer: " & TopPerformer
+			```
+		lineageTag: b74cea79-3518-4acc-a84b-1f38ee7fed98
+
+	measure EmployeeRevenueTooltip = ```
+			
+			VAR CurrentEmp = SELECTEDVALUE('employees'[employeeName])
+			VAR Revenue = [Total Revenue]
+			VAR RankEmp = 
+			    RANKX(
+			        ALLSELECTED('employees'[employeeName]),
+			        [Total Revenue],
+			        ,
+			        DESC,
+			        Dense
+			    )
+			VAR TopEmp = 
+			    TOPN(1, ALLSELECTED('employees'[employeeName]), [Total Revenue], DESC)
+			VAR TopEmpName = CONCATENATEX(TopEmp, 'employees'[employeeName], ", ")
+			VAR Message = 
+			    IF(
+			        CurrentEmp = TopEmpName,
+			        "🏆 Top revenue employee.",
+			        "Rank #" & RankEmp & " in revenue."
+			    )
+			VAR Avr = DIVIDE(Revenue, [Total Orders],0)
+			RETURN
+			"Orders handled: " & [Total Orders] & UNICHAR(10) &
+			"Average value per orders: " & Avr & UNICHAR(10) &
+			Message
+			```
+		lineageTag: b5dc3ba9-744e-4cc3-abd6-97702284cd9d
+
+	column employeeID
+		dataType: int64
+		formatString: 0
+		lineageTag: e1bebd95-20ba-41ed-8084-d91376ccb718
+		summarizeBy: none
+		sourceColumn: employeeID
+
+		annotation SummarizationSetBy = Automatic
+
+	column employeeName
+		dataType: string
+		lineageTag: d4f2e0a7-6e25-41c4-a467-1cb13182d1b8
+		summarizeBy: none
+		sourceColumn: employeeName
+
+		annotation SummarizationSetBy = Automatic
+
+	column title
+		dataType: string
+		lineageTag: abe44c81-7476-416a-a686-df39d052bf64
+		summarizeBy: none
+		sourceColumn: title
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: 320e780d-5463-49b7-8ae1-9afb37c96ce7
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column country
+		dataType: string
+		lineageTag: e8875306-ac15-48aa-b85e-9eceed69ea99
+		summarizeBy: none
+		sourceColumn: country
+
+		annotation SummarizationSetBy = Automatic
+
+	column reportsTo
+		dataType: int64
+		formatString: 0
+		lineageTag: f8e08c2a-ef73-4381-98b2-aa6abbafd00d
+		summarizeBy: none
+		sourceColumn: reportsTo
+
+		annotation SummarizationSetBy = Automatic
+
+	partition employees = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("E:\TP_DataViz\Project\Project Northwind\Northwind Traders\employees.csv"),[Delimiter=",", Columns=6, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"employeeID", Int64.Type}, {"employeeName", type text}, {"title", type text}, {"city", type text}, {"country", type text}, {"reportsTo", Int64.Type}}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Changed Type",{{"city", Text.Trim, type text}})
+				in
+				    #"Trimmed Text"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

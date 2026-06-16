@@ -1,0 +1,4 @@
+*.User.json
+.pbi/User.json
+.pbi/localSettings.json
+.pbi/cache/

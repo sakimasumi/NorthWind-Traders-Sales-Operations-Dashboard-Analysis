@@ -1,0 +1,48 @@
+relationship a28470cb-23ac-49ba-a9b7-2a7928c08342
+	joinOnDateBehavior: datePartOnly
+	fromColumn: orders.requiredDate
+	toColumn: LocalDateTable_7207581b-8320-4cb0-b590-9ca04c10c8b9.Date
+
+relationship 2893a0aa-10c1-4636-b050-3ffc3a0789e7
+	joinOnDateBehavior: datePartOnly
+	fromColumn: orders.shippedDate
+	toColumn: LocalDateTable_fd9962be-0ff0-40a2-bd75-ec5a327c7e66.Date
+
+relationship AutoDetected_458ccbd7-47af-4747-833c-f2566966d4e8
+	fromColumn: orders.employeeID
+	toColumn: employees.employeeID
+
+relationship AutoDetected_a71d3882-8da9-48e6-8ba3-6e9819d662e7
+	fromColumn: order_details.orderID
+	toColumn: orders.orderID
+
+relationship AutoDetected_030151dd-c711-4ba8-83df-a679f6c6fcb1
+	fromColumn: products.categoryID
+	toColumn: categories.categoryID
+
+relationship AutoDetected_aa18a26b-335b-4956-a284-39964e7a62c7
+	fromColumn: order_details.productID
+	toColumn: products.productID
+
+relationship AutoDetected_2e50601e-b28a-47e3-bea3-26fd01783fbb
+	fromColumn: orders.shipperID
+	toColumn: shippers.shipperID
+
+relationship AutoDetected_0bea48fe-eca2-4fe2-98ab-b4166f01f127
+	fromColumn: orders.customerID
+	toColumn: customers.customerID
+
+relationship 2b739530-83bb-49ed-b761-346d32901e73
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FiscalCalendar.Date
+	toColumn: LocalDateTable_9229e544-0b3b-4e6d-8baf-e58c1b9c8c93.Date
+
+relationship 057091ef-e422-40cd-86d6-b7d2e189bab0
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FiscalCalendar.CalendarDate
+	toColumn: LocalDateTable_85275355-28a2-4812-81c0-1ecdf5a69fb4.Date
+
+relationship ef2109d3-a716-7ac3-1e9c-9a1843b5036a
+	fromColumn: orders.orderDate
+	toColumn: FiscalCalendar.CalendarDate
+

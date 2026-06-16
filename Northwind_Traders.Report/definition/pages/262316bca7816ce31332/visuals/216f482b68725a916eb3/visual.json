@@ -1,0 +1,394 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "216f482b68725a916eb3",
+  "position": {
+    "x": 696.53425999519413,
+    "y": 93.8807046080479,
+    "z": 12000,
+    "height": 590.539916082882,
+    "width": 563.28422764828747,
+    "tabOrder": 12000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Customer Analysis",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontFamily": "Georgia",
+                      "fontStyle": "italic",
+                      "fontSize": "16pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Unique Customers 91, Countries 21, Cities 69.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Top customer is Hort Kloss from Cunewalde made the most number of sales of $110K",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "USA in Customer City has the highest sales of 246K, Germany 230K",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "QUICK-Stop from Customer Company has the highest sales of $110K",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Shipping And Employees Analysis",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontFamily": "Georgia",
+                      "fontStyle": "italic",
+                      "fontSize": "16pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Total Orders 830, Delivered on time 772, Delayed 37, Not Delivered 21, Freight Per Order 249.77",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Total Employees 9",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Average shipping days United Package 9, Speedy Express 8, Federal Shipping 8",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Freight Per Order United Package 281, Speedy Express 249, Federal Shipping 210",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Sales Representative Margaret Peacock made the highest sales of $232K.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "United Package has delivered more orders comparing the other two shipping companies.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Recommendations",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontFamily": "Georgia",
+                      "fontStyle": "italic",
+                      "fontSize": "16pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Increase efforts to promote sales within the Meat & Poultry category.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Activate marketing strategies for high-value products like Thuringer Rostbratwurst and Alice Mutton within the Meat & Poultry category.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Promote high-revenue products such as Cote de Blaye and Raclette Courdavault to drive increased sales.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Direct marketing efforts towards the most sold product categories, including Beverages, Dairy Products, and Confections.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Identify and pursue opportunities to boost sales in key markets such as the USA and Germany. Prioritize retaining top customers like Hort Kloss and key customer companies like QUICK-Stop.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Consider allocating more shipping contracts to Federal Shipping and Speedy Express to expedite deliveries and meet customer expectations for faster shipping.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "100D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'📈 Key Insights'"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Georgia'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "24D"
+                }
+              }
+            },
+            "heading": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Heading2'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "divider": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "spacing": [
+        {
+          "properties": {
+            "verticalSpacing": {
+              "expr": {
+                "Literal": {
+                  "Value": "20D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

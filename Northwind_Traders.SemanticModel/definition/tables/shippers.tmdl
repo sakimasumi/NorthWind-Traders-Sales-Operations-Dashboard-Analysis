@@ -1,0 +1,189 @@
+table shippers
+	lineageTag: e938a825-70de-4af3-b36a-790eabae0115
+
+	measure Orders_Delivered_On_Time =
+			
+			CALCULATE(
+			    COUNTROWS('Orders'),
+			    NOT ISBLANK('Orders'[requiredDate]),
+			    NOT ISBLANK('orders'[shippedDate]),
+			    'Orders'[shippedDate] <= 'Orders'[requiredDate]
+			)
+		formatString: 0
+		lineageTag: aeed2eb9-8cc6-4899-a4a1-84b65efb7de4
+
+	measure Orders_Delayed =
+			
+			CALCULATE(
+			    COUNTROWS('Orders'),
+			    NOT ISBLANK('Orders'[requiredDate]),
+			    NOT ISBLANK(orders[shippedDate]),
+			    'Orders'[shippedDate] > 'Orders'[requiredDate]
+			)
+		formatString: 0
+		lineageTag: 740837f0-8147-4b10-b202-1516ab68d4df
+
+	measure Orders_Not_Delivered =
+			
+			CALCULATE(
+			    COUNTROWS('Orders'),
+			    ISBLANK('Orders'[shippedDate])
+			)
+		formatString: 0
+		lineageTag: 0113d064-e9ea-452d-ad2f-836a42ad88ec
+
+	measure 'Average Shipping Days' =
+			
+			AVERAGEX(
+			    FILTER(
+			        'Orders',
+			        NOT(ISBLANK('Orders'[ShippedDate])) && 'Orders'[ShippedDate] >= 'Orders'[OrderDate]
+			    ),
+			    DATEDIFF('Orders'[OrderDate], 'Orders'[ShippedDate], DAY)
+			)
+		formatString: 0
+		lineageTag: 89126310-ea5e-49c7-b711-2c649fb5c859
+
+	measure OrdersDelayedTooltip =
+			
+			VAR Delayed = [Orders_Delayed]
+			VAR TotalOrders = [Total Orders]
+			VAR Pct = DIVIDE(Delayed, TotalOrders, 0)
+			VAR PerformanceMessage =
+			    SWITCH(
+			        TRUE(),
+			        Pct <= 0.02, "✅ Good – excellent delivery performance.",
+			        Pct <= 0.05, "⚠️ Medium – monitor for improvement.",
+			        Pct > 0.05, "❌ Bad – investigate shipping carrier or route issues."
+			    )
+			RETURN
+			FORMAT(Pct, "0.0%") & " of total orders" & UNICHAR(10) &
+			PerformanceMessage
+		lineageTag: 552ae731-b83b-4194-a6ba-759e6890227a
+
+	measure OrdersOnTimeTooltip =
+			
+			VAR OnTime = [Orders_Delivered_On_Time]
+			VAR TotalOrders = [Total Orders]
+			VAR Pct = DIVIDE(OnTime, TotalOrders, 0)
+			VAR PerformanceMessage =
+			    SWITCH(
+			        TRUE(),
+			        Pct >= 0.95, "✅ Good – excellent delivery performance.",
+			        Pct >= 0.9, "⚠️ Medium – monitor for improvement.",
+			        Pct < 0.9, "❌ Bad – investigate shipping carrier or route issues."
+			    )
+			RETURN
+			FORMAT(Pct, "0.0%") & " of total orders" & UNICHAR(10) &
+			PerformanceMessage
+		lineageTag: 8056c373-7951-4bd5-ac5d-6279bfdd21b9
+
+	measure OrdersNotDeliveredTooltip =
+			
+			VAR NotDelivered = [Orders_Not_Delivered]
+			VAR TotalOrders = [Total Orders]
+			VAR Pct = DIVIDE(NotDelivered, TotalOrders, 0)
+			VAR PerformanceMessage =
+			    SWITCH(
+			        TRUE(),
+			        Pct <= 0.005, "✅ Good – excellent delivery performance.",
+			        Pct <= 0.015, "⚠️ Medium – monitor for improvement.",
+			        Pct > 0.015, "❌ Bad – investigate shipping carrier or route issues."
+			    )
+			RETURN
+			FORMAT(Pct, "0.0%") & " of total orders" & UNICHAR(10) &
+			PerformanceMessage
+		lineageTag: a06d1504-caf3-46a1-9bd5-7a338efb876c
+
+	measure AvgShippingDaysCompanyTooltip = ```
+			
+			VAR CurrentShipper = SELECTEDVALUE('shippers'[shipping company])
+			VAR AvgDays = [Average Shipping Days]
+			VAR Message = 
+			    SWITCH(
+			        TRUE(),
+			        AvgDays <= 8, "🏆 Fastest shipping company.",
+			        AvgDays <= 10, "⚠️ Moderate Speed – Monitor closely",
+			        AvgDays > 10, "❌ Slow Speed – Urgent renegotiation required"
+			    )
+			RETURN
+			Message
+			```
+		lineageTag: 4d08f48e-b18f-4a2d-8748-e62dffa0a8b7
+
+	measure AvgShippingDaysEmployeeTooltip = ```
+			
+			VAR CurrentEmp = SELECTEDVALUE('employees'[employeeName])
+			VAR AvgDays = [Average Shipping Days] 
+			VAR Message = 
+			    SWITCH(
+			        TRUE(),
+			        AvgDays <= 8, "🏆 Fastest shipping company.",
+			        AvgDays <= 10, "⚠️ Moderate Speed – Monitor closely",
+			        AvgDays > 10, "❌ Slow Speed – Urgent renegotiation required"
+			    )
+			RETURN
+			Message
+			```
+		lineageTag: 4008181c-dfdf-4232-9073-0036ad2f92b4
+
+	measure OrderCountByShipperTooltip = ```
+			
+			VAR CurrentShipper = SELECTEDVALUE('shippers'[shipping company])
+			VAR OrderCount = [Total Orders]   -- respects shipper filter
+			VAR Revenue = [Total Revenue]
+			VAR TotalOrdersAll = CALCULATE([Total Orders], ALLSELECTED('shippers'))
+			VAR PctOrders = DIVIDE(OrderCount, TotalOrdersAll, 0)
+			-- Rank shippers by order count
+			VAR RankShipper = 
+			    RANKX(
+			        ALLSELECTED('shippers'[shipping company]),
+			        [Total Orders],
+			        ,
+			        DESC,
+			        Dense
+			    )
+			-- Message based on rank
+			VAR Message = 
+			    SWITCH(
+			        RankShipper,
+			        1, "🏆 Most orders handled by this carrier.",
+			        2, "🥈 Second most orders handled by this carrier.",
+			        3, "🥉 Third most orders handled by this carrier.",
+			        "Rank #" & RankShipper & " – consider volume discounts."
+			    )
+			RETURN
+			Message
+			```
+		lineageTag: e1aa29e8-f10d-43a7-afcb-940d9e2d04c7
+
+	column shipperID
+		dataType: int64
+		formatString: 0
+		lineageTag: 45602bd6-bbbe-46e4-a98c-ed5dd16f5bb8
+		summarizeBy: none
+		sourceColumn: shipperID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'shipping company'
+		dataType: string
+		lineageTag: ef46ef5a-f454-4fde-add8-d44f71177089
+		summarizeBy: none
+		sourceColumn: shipping company
+
+		annotation SummarizationSetBy = Automatic
+
+	partition shippers = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("E:\TP_DataViz\Project\Project Northwind\Northwind Traders\shippers.csv"),[Delimiter=",", Columns=2, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"shipperID", Int64.Type}, {"companyName", type text}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"companyName", "shipping company"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

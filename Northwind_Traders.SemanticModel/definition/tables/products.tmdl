@@ -1,0 +1,202 @@
+table products
+	lineageTag: 95e532b0-2078-4836-9695-7a26ee1d865f
+
+	measure 'Unique Product Count' = ```
+			DISTINCTCOUNT('products'[productID])
+			
+			```
+		formatString: 0
+		lineageTag: 11d8f529-6881-436c-890a-a2be0847e7f2
+
+	measure 'Discontinued Products Sale' = ```
+			
+			CALCULATE(
+			    [Total Revenue], 
+			    products[discontinued] = 1
+			)
+			```
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: f35c16b4-eb1a-4bf0-91f3-45cee28b016e
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Discontinued Products Sale %' = DIVIDE([Discontinued Products Sale], [Total Revenue], 0)
+		lineageTag: 54dd1f0c-cc8d-4e62-975d-e91dc128a333
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Speak = "Out of all products in catalog"
+		lineageTag: 20a587f6-add3-4cb8-aab0-c2707dbfb31a
+
+	measure S =
+			
+			VAR DiscontinuedCount = CALCULATE(DISTINCTCOUNT('products'[productID]), 'products'[discontinued] = 1)
+			VAR TotalProducts = DISTINCTCOUNT('products'[productID])
+			VAR Pct = DIVIDE(DiscontinuedCount, TotalProducts, 0)
+			VAR Reve = [Discontinued Products Sale]
+			RETURN
+			"Generate: " & FORMAT(Reve, "$#,##0.00") & UNICHAR(10) &
+			"Percentage of total products: " & FORMAT(Pct, "0%") & UNICHAR(10) &
+			"Consider impact on revenue and customer satisfaction"
+		lineageTag: f17519ec-4326-4863-bf9a-cbe0fe893dce
+
+	measure ProductTip = ```
+			
+			VAR ProductRevenue = [Total Revenue]
+			VAR ProductDiscount = [Discount Value]
+			VAR DiscountPct = DIVIDE(ProductDiscount, ProductRevenue, 0)
+			VAR RankProduct = 
+			    RANKX(
+			        ALLSELECTED('products'[productName]),
+			        [Total Revenue],
+			        ,
+			        DESC,
+			        Dense
+			    )
+			VAR Message = 
+			    SWITCH(
+			        RankProduct,
+			        1, "🏆 Top-selling product.",
+			        2, "🥈 Second best-selling product.",
+			        3, "🥉 Third best-selling product.",
+			        "Rank " & RankProduct & " best-selling product."
+			    )
+			RETURN
+			Message & UNICHAR(10) &
+			FORMAT(DiscountPct, "0.00%") & " of revenue is discount."
+			```
+		lineageTag: 69a590cd-2f82-469a-ac60-de41dc3622ea
+
+	measure DiscontinuedSaleDollarTip =
+			
+			VAR DiscontinuedRevenue = CALCULATE([Total Revenue], 'products'[discontinued] = 1)
+			VAR TotalRevenue = [Total Revenue]
+			VAR PctOfTotal = DIVIDE(DiscontinuedRevenue, TotalRevenue, 0)
+			RETURN
+			FORMAT(PctOfTotal, "0.00%") & " of total revenue" & UNICHAR(10) &
+			"Consider impact of discontinuation on customer loyalty."
+		lineageTag: 3634f6be-a145-4d47-b4bb-f04d59429560
+
+	measure Mss = "Monitor replacement products to fill the gap."
+		lineageTag: e857e12e-c9f1-4505-b043-ba4bfb77520c
+
+	measure UnitPriceBarTooltip =
+			
+			VAR CurrentCategory = SELECTEDVALUE('categories'[categoryName])
+			VAR DiscontinuedStatus = SELECTEDVALUE('products'[discontinued])
+			VAR StatusText = IF(DiscontinuedStatus = 1, "Discontinued", "Active")
+			VAR UnitPriceSum = SUM('products'[unitPrice])   -- or your measure
+			RETURN
+			CurrentCategory & " - " & StatusText & UNICHAR(10) &
+			"Unit price reflects list price; compare active vs discontinued."
+		lineageTag: 1ede8eee-0e98-4be8-97de-fa1aefbc3652
+
+	measure DiscontinuedCategorySaleTooltip =
+			
+			VAR CurrentCategory = SELECTEDVALUE('categories'[categoryName])
+			VAR RevenueDisc = CALCULATE([Total Revenue], 'products'[discontinued] = 1)
+			VAR TotalRevenueCat = [Total Revenue]
+			VAR Pct = DIVIDE(RevenueDisc, TotalRevenueCat, 0)
+			RETURN
+			"Represents " & FORMAT(Pct, "0%") & " of total revenue."
+		lineageTag: 3e712314-5b58-4ece-856f-dd7ee85ff76e
+
+	measure DiscontinuedProductTooltip =
+			
+			VAR CurrentProduct = SELECTEDVALUE('products'[productName])
+			VAR CurrentSale = [Discontinued Products Sale]
+			-- Only products that have a positive discontinued sale value (visible in the pie chart)
+			VAR VisibleProducts =
+			    FILTER(
+			        ALLSELECTED('products'[productName]),
+			        [Discontinued Products Sale] > 0
+			    )
+			-- Rank them by Discontinued Products Sale (descending)
+			VAR RankProduct =
+			    RANKX(
+			        VisibleProducts,
+			        [Discontinued Products Sale],
+			        ,
+			        DESC,
+			        Dense
+			    )
+			VAR Message =
+			    SWITCH(
+			        TRUE(),
+			        RankProduct = 1, "🏆 Highest revenue among discontinued products.",
+			        RankProduct = 2, "🥈 Second highest.",
+			        RankProduct = 3, "🥉 Third highest.",
+			        "Rank #" & RankProduct & " among discontinued products."
+			    )
+			RETURN
+			Message
+		lineageTag: 06c7102b-b023-484e-856f-a774eca98261
+
+	column productID
+		dataType: int64
+		formatString: 0
+		lineageTag: d9e0eac1-7709-4257-b2e9-d2f2ba3b3b62
+		summarizeBy: none
+		sourceColumn: productID
+
+		annotation SummarizationSetBy = Automatic
+
+	column productName
+		dataType: string
+		lineageTag: 4da84057-91bd-4b82-be2a-300acc00d21f
+		summarizeBy: none
+		sourceColumn: productName
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantityPerUnit
+		dataType: string
+		lineageTag: 6d12ffd1-ccee-45e9-b804-729e0dd9dd7d
+		summarizeBy: none
+		sourceColumn: quantityPerUnit
+
+		annotation SummarizationSetBy = Automatic
+
+	column unitPrice
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 5f926cba-a3c4-41c1-b0f4-fc083e6ca9ff
+		summarizeBy: sum
+		sourceColumn: unitPrice
+
+		annotation SummarizationSetBy = Automatic
+
+	column discontinued
+		dataType: int64
+		formatString: 0
+		lineageTag: 3bad28d7-182e-4bd3-bcc8-d195cf48d54c
+		summarizeBy: sum
+		sourceColumn: discontinued
+
+		annotation SummarizationSetBy = Automatic
+
+	column categoryID
+		dataType: int64
+		formatString: 0
+		lineageTag: 93b8953d-26bf-477e-963f-88b327695939
+		summarizeBy: none
+		sourceColumn: categoryID
+
+		annotation SummarizationSetBy = Automatic
+
+	partition products = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("E:\TP_DataViz\Project\Project Northwind\Northwind Traders\products.csv"),[Delimiter=",", Columns=6, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"productID", Int64.Type}, {"productName", type text}, {"quantityPerUnit", type text}, {"unitPrice", type number}, {"discontinued", Int64.Type}, {"categoryID", Int64.Type}}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Changed Type",{{"quantityPerUnit", Text.Trim, type text}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Trimmed Text",{{"unitPrice", Currency.Type}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

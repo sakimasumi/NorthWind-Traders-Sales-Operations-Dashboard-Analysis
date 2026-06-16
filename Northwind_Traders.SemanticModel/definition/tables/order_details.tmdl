@@ -1,0 +1,237 @@
+table order_details
+	lineageTag: d0c2055c-1b10-406e-8379-8c18f02b8d34
+
+	measure 'Total Revenue' = ```
+			
+			SUMX(
+			    Order_Details, 
+			    Order_Details[unitPrice] * Order_Details[quantity] * (1 - Order_Details[discount])
+			)
+			```
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 47acd11b-3ebf-435f-9898-e44b8ba374bb
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Gross Revenue' = ```
+			
+			SUMX(
+			    Order_Details, 
+			    Order_Details[unitPrice] * Order_Details[quantity]
+			)
+			```
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: ef976e45-098a-4060-aa3e-27a62a0775ca
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Discount Value' = [Gross Revenue] - [Total Revenue]
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 70aa77d1-2414-4ce4-a41a-88c6daffa81c
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Top category' = ```
+			
+			VAR TopCategory = 
+			    TOPN(1, 
+			        VALUES('categories'[categoryName]), 
+			        [Total Revenue], 
+			        DESC
+			    )
+			VAR TopCatName = CONCATENATEX(TopCategory, 'categories'[categoryName], ", ")
+			VAR TopCatRevenue = 
+			    CALCULATE([Total Revenue], 
+			        KEEPFILTERS('categories'[categoryName] IN TopCategory)
+			    )
+			RETURN
+			": " & TopCatName & " (" & FORMAT(TopCatRevenue, "$#,##0.00") & ")"
+			```
+		lineageTag: 00c9992d-352d-4c34-add9-39e8af18d70d
+
+	measure 'Average value per order' = ```
+			
+			VAR TotalQty = sum('order_details'[quantity])
+			VAR Orders = [Total Orders]     
+			VAR AvgItems = DIVIDE(TotalQty, Orders, 0)
+			RETURN
+			": " & FORMAT(AvgItems, "0.00")
+			```
+		lineageTag: 0ac95168-5c69-4652-acf7-32e103eb6535
+
+	measure 'Percent of total' = ```
+			
+			VAR CurrentCategory = SELECTEDVALUE('categories'[categoryName])
+			VAR CategoryRevenue = [Total Revenue]
+			VAR TotalRevenue = CALCULATE([Total Revenue], ALLSELECTED('categories'))
+			VAR PercentOfTotal = DIVIDE(CategoryRevenue, TotalRevenue, 0)
+			VAR RankCategory = 
+			    RANKX(
+			        ALLSELECTED('categories'[categoryName]),
+			        [Total Revenue],
+			        ,
+			        DESC,
+			        Dense
+			    )
+			VAR TopCategory = 
+			    TOPN(1, ALLSELECTED('categories'[categoryName]), [Total Revenue], DESC)
+			VAR TopCategoryName = CONCATENATEX(TopCategory, 'categories'[categoryName], ", ")
+			VAR Message = 
+			    SWITCH(
+			        TRUE(),
+			        CurrentCategory = TopCategoryName, "Top performing category.",
+			        RankCategory = 2, "Second highest category.",
+			        RankCategory = 3, "Third highest category.",
+			        "Rank: " & RankCategory
+			    )
+			RETURN
+			": " & FORMAT(PercentOfTotal, "0.00%") & UNICHAR(10) &
+			Message
+			```
+		lineageTag: 9f875d48-436b-43a8-8cd6-0a5cd1e79fd7
+
+	measure 'Total Percentage' = ```
+			
+			VAR CurrentCompany = SELECTEDVALUE('customers'[companyName])
+			VAR CompanyRevenue = [Total Revenue]
+			VAR TotalRevenueAll = CALCULATE([Total Revenue], ALLSELECTED('customers'))
+			VAR PercentOfTotal = DIVIDE(CompanyRevenue, TotalRevenueAll, 0)
+			VAR OrderCount = 
+			    CALCULATE(
+			        DISTINCTCOUNT('orders'[orderID]),
+			        TREATAS(VALUES('customers'[customerID]), 'orders'[customerID])
+			    )
+			VAR RankCompany = 
+			    RANKX(
+			        ALLSELECTED('customers'[companyName]),
+			        [Total Revenue],
+			        ,
+			        DESC,
+			        Dense
+			    )
+			VAR RankSuffix = 
+			    SWITCH(
+			        RankCompany,
+			        1, "st",
+			        2, "nd",
+			        3, "rd",
+			        "th"
+			    )
+			VAR Message = 
+			    IF(
+			        RankCompany = 1,
+			        CurrentCompany & " is #1.",
+			        "Rank: #" & RankCompany
+			    )
+			RETURN
+			": " & FORMAT(PercentOfTotal, "0.00%") & UNICHAR(10) &
+			"Orders from this company: " & FORMAT(OrderCount, "#,##0") & UNICHAR(10) &
+			Message
+			```
+		lineageTag: 7f0282e7-a122-4a5b-972d-dc784227c76b
+
+	measure Mg = ```
+			
+			VAR DiscountAmt = [Discount Value]      
+			VAR GrossRev = [Gross Revenue]         
+			VAR DiscountPct = DIVIDE(DiscountAmt, GrossRev, 0)
+			RETURN
+			FORMAT(DiscountPct, "0.0%") & " of gross revenue" & UNICHAR(10) &
+			"High discounts may boost volume but reduce margin"
+			```
+		lineageTag: 8ad567e1-57d6-432a-a06d-3ee463e3ad44
+
+	measure ShipperTooltip = ```
+			
+			VAR CurrentShipper = SELECTEDVALUE('shippers'[shipping company])
+			VAR ShipperRevenue = [Total Revenue]
+			VAR TotalRevenueAll = CALCULATE([Total Revenue], ALLSELECTED('shippers'))
+			VAR PercentOfTotal = DIVIDE(ShipperRevenue, TotalRevenueAll, 0)
+			-- Rank all shippers by revenue
+			VAR RankShipper = 
+			    RANKX(
+			        ALLSELECTED('shippers'[shipping company]),
+			        [Total Revenue],
+			        ,
+			        DESC,
+			        Dense
+			    )
+			-- Message based on rank
+			VAR Message =
+			    SWITCH(
+			        RankShipper,
+			        1, "🏆 Top carrier – generates the most revenue.",
+			        2, "🥈 Second carrier – good revenue, negotiate better rates.",
+			        3, "🥉 Third carrier – consider consolidating for discounts.",
+			        "Other carrier – evaluate performance."
+			    )
+			RETURN
+			CurrentShipper & ": " & FORMAT(ShipperRevenue, "$#,##0") & 
+			" (" & FORMAT(PercentOfTotal, "0%") & ")" & UNICHAR(10) &
+			Message
+			```
+		lineageTag: 4f31bbc0-a197-4257-aa0a-5d90d35dc290
+
+	measure Orders = DISTINCTCOUNT(orders[orderID])
+		formatString: 0
+		lineageTag: 3b32297d-3d42-471b-86a9-2019fc6f980c
+
+	column orderID
+		dataType: int64
+		formatString: 0
+		lineageTag: 80774572-0304-47b9-beff-5c3e430198be
+		summarizeBy: none
+		sourceColumn: orderID
+
+		annotation SummarizationSetBy = Automatic
+
+	column productID
+		dataType: int64
+		formatString: 0
+		lineageTag: ba523731-3467-4dd9-bbbe-ba875ce99f5d
+		summarizeBy: none
+		sourceColumn: productID
+
+		annotation SummarizationSetBy = Automatic
+
+	column unitPrice
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: f9009835-8d3c-46f1-987d-129dd2a940f6
+		summarizeBy: sum
+		sourceColumn: unitPrice
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: a9472bfb-c20c-4a6e-9350-1d570cbf5b30
+		summarizeBy: sum
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column discount
+		dataType: double
+		formatString: 0%;-0%;0%
+		lineageTag: 2b43ca2f-e039-49fb-88a9-b631d50cae9f
+		summarizeBy: sum
+		sourceColumn: discount
+
+		annotation SummarizationSetBy = Automatic
+
+	partition order_details = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("E:\TP_DataViz\Project\Project Northwind\Northwind Traders\order_details.csv"),[Delimiter=",", Columns=5, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"orderID", Int64.Type}, {"productID", Int64.Type}, {"unitPrice", type number}, {"quantity", Int64.Type}, {"discount", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

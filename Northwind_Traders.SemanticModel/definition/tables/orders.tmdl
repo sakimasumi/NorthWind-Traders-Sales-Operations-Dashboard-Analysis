@@ -1,0 +1,137 @@
+table orders
+	lineageTag: 857f23c4-e9d2-4aab-a726-3427fac69b0f
+
+	measure 'Total Orders' = DISTINCTCOUNT(Orders[orderID])
+		formatString: 0
+		lineageTag: abe894f9-fd34-4833-b0a4-3eb9f6aa1353
+
+	measure 'freight per order' =
+			
+			DIVIDE(
+			    SUM('orders'[freight]),
+			    COUNTROWS('orders')
+			)
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: d5daa7e9-a74e-4d5d-a4f5-0b9de76a91b6
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Average order value' =
+			
+			VAR Orders = [Total Orders]
+			VAR Revenue = [Total Revenue]
+			VAR AOV = DIVIDE(Revenue, Orders, 0)
+			RETURN
+			": " & FORMAT(AOV, "$#,##0") & UNICHAR(10) &
+			"Monitor volume vs. value."
+		lineageTag: 7f74a6b7-38c7-4838-ae43-9af6d0a41d2f
+
+	column orderID
+		dataType: int64
+		formatString: 0
+		lineageTag: 783e7912-61b0-4dcb-a659-51386d5a624c
+		summarizeBy: none
+		sourceColumn: orderID
+
+		annotation SummarizationSetBy = Automatic
+
+	column customerID
+		dataType: string
+		lineageTag: eb469b49-6b10-4900-9dcc-36dcaa91a604
+		summarizeBy: none
+		sourceColumn: customerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column employeeID
+		dataType: int64
+		formatString: 0
+		lineageTag: 3cf7e0f6-593c-460a-9dde-d69b5cdeeb54
+		summarizeBy: none
+		sourceColumn: employeeID
+
+		annotation SummarizationSetBy = Automatic
+
+	column orderDate
+		dataType: dateTime
+		formatString: dd/mm/yyyy
+		lineageTag: dbc5d080-1fcc-43c7-bae9-5115e3e639e9
+		summarizeBy: none
+		sourceColumn: orderDate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column requiredDate
+		dataType: dateTime
+		formatString: dd/mm/yyyy
+		lineageTag: 8ee62ae4-5dad-45a8-949c-c9090392d69a
+		summarizeBy: none
+		sourceColumn: requiredDate
+
+		variation Variation
+			isDefault
+			relationship: a28470cb-23ac-49ba-a9b7-2a7928c08342
+			defaultHierarchy: LocalDateTable_7207581b-8320-4cb0-b590-9ca04c10c8b9.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column shippedDate
+		dataType: dateTime
+		formatString: mm/dd/yyyy
+		lineageTag: f41ffb64-f2cd-4bf3-899e-cfe3eb8e27c9
+		summarizeBy: none
+		sourceColumn: shippedDate
+
+		variation Variation
+			isDefault
+			relationship: 2893a0aa-10c1-4636-b050-3ffc3a0789e7
+			defaultHierarchy: LocalDateTable_fd9962be-0ff0-40a2-bd75-ec5a327c7e66.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column shipperID
+		dataType: int64
+		formatString: 0
+		lineageTag: 55956f06-6c6e-487d-96cc-af2564752dcd
+		summarizeBy: none
+		sourceColumn: shipperID
+
+		annotation SummarizationSetBy = Automatic
+
+	column freight
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 3b16180d-91bc-4dd6-87cd-ca00a1e22319
+		summarizeBy: sum
+		sourceColumn: freight
+
+		annotation SummarizationSetBy = Automatic
+
+	partition orders = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("E:\TP_DataViz\Project\Project Northwind\Northwind Traders\orders.csv"),[Delimiter=",", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"orderID", Int64.Type}, {"customerID", type text}, {"employeeID", Int64.Type}, {"orderDate", type date}, {"requiredDate", type date}, {"shippedDate", type date}, {"shipperID", Int64.Type}, {"freight", type number}}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Changed Type",{{"customerID", Text.Trim, type text}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Trimmed Text",{{"freight", Currency.Type}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

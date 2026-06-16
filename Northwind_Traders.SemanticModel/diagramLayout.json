@@ -1,0 +1,126 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 372.08518822667236,
+        "y": 46.345132727284422
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 486.75402371080963,
+            "y": 35.630222794315515
+          },
+          "nodeIndex": "categories",
+          "nodeLineageTag": "e2e2f3e7-7856-498a-a187-43b50b462ed3",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 918.6661460470018,
+            "y": 366.89123660631606
+          },
+          "nodeIndex": "customers",
+          "nodeLineageTag": "27940246-8f25-42a8-8981-8e9ca39d7b8f",
+          "size": {
+            "height": 277.44533419147319,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 1712.4551187609297,
+            "y": 604.44634452908736
+          },
+          "nodeIndex": "employees",
+          "nodeLineageTag": "4710240c-801b-41cd-a59f-667825396948",
+          "size": {
+            "height": 261.85711171896025,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 1169.0500826902642,
+            "y": 1.9862199199062776
+          },
+          "nodeIndex": "order_details",
+          "nodeLineageTag": "d0c2055c-1b10-406e-8379-8c18f02b8d34",
+          "size": {
+            "height": 329.15955762939382,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 1492.6562251421199,
+            "y": 289.6809663730678
+          },
+          "nodeIndex": "orders",
+          "nodeLineageTag": "857f23c4-e9d2-4aab-a726-3427fac69b0f",
+          "size": {
+            "height": 347.71422343792051,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 846.65479237232648,
+            "y": 0
+          },
+          "nodeIndex": "products",
+          "nodeLineageTag": "95e532b0-2078-4836-9695-7a26ee1d865f",
+          "size": {
+            "height": 319.75622375972296,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 1792.7487670824282,
+            "y": 178.75979279156496
+          },
+          "nodeIndex": "shippers",
+          "nodeLineageTag": "e938a825-70de-4af3-b36a-790eabae0115",
+          "size": {
+            "height": 234.89066838294661,
+            "width": 234
+          },
+          "zIndex": 8
+        },
+        {
+          "location": {
+            "x": 1295.2341840723529,
+            "y": 676.84728609631065
+          },
+          "nodeIndex": "FiscalCalendar",
+          "nodeLineageTag": "09af19cd-554a-42bb-adfb-244759518816",
+          "size": {
+            "height": 255.67222311611795,
+            "width": 234
+          },
+          "zIndex": 5
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 50.34689210282346,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

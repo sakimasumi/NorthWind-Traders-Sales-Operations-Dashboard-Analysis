@@ -1,0 +1,43 @@
+table categories
+	lineageTag: e2e2f3e7-7856-498a-a187-43b50b462ed3
+
+	column categoryID
+		dataType: int64
+		formatString: 0
+		lineageTag: 15035c1a-6760-4d58-b675-e43f8e6df762
+		summarizeBy: none
+		sourceColumn: categoryID
+
+		annotation SummarizationSetBy = Automatic
+
+	column categoryName
+		dataType: string
+		lineageTag: 09d1a2a2-fbd9-4d43-a9d4-8dfb81914818
+		summarizeBy: none
+		sourceColumn: categoryName
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: e6d4445e-7f90-46ff-8669-7222600723eb
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	partition categories = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("E:\TP_DataViz\Project\Project Northwind\Northwind Traders\categories.csv"),[Delimiter=",", Columns=3, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"categoryID", Int64.Type}, {"categoryName", type text}, {"description", type text}}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Changed Type",{{"categoryName", Text.Trim, type text}, {"description", Text.Trim, type text}})
+				in
+				    #"Trimmed Text"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

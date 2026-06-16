@@ -1,0 +1,528 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "1624d23764415414093b",
+  "position": {
+    "x": 136.27844217297277,
+    "y": 57.539786695255167,
+    "z": 11000,
+    "height": 625.36662908264168,
+    "width": 564.79843256132051,
+    "tabOrder": 11000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Sale Performance",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontFamily": "Georgia",
+                      "fontStyle": "italic",
+                      "fontSize": "16pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Net Sales $1.27 M, Quantity - 51K, Orders- 830, Discounts - $88.67K Unique Products - 77,",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "There was a 58.56% YoY growth in fiscal year FY14-FY15",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "The most sold category is Beverages with sales of $268k",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "QUICK-Stop made the highest sales in Customer Company with sales of $110K",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "In Shippers Company, United Package delivers 42.15% of the sales.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "The sales in the FY13-FY14 show a mild increase and decrease throughout the months, only peaking in January with net sales of $61k. August records the lowest sales in this fiscal year.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "In FY14-FY15, there was a sharp increase in net sales in April of over $124k, lowest sales month which was in November $46K.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "The sales in the FY13-FY14 show a mild increase and decrease throughout the months, only peaking in January with net sales of $61k. August records the lowest sales in this fiscal year. ",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "In FY14-FY15, there was a sharp increase in net sales in April of over $124k, lowest sales month which was in November ($46k). ",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Product Performance",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontFamily": "Georgia",
+                      "fontStyle": "italic",
+                      "fontSize": "16pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "The top 3 selling products include Cote de Blaye($141k), Thuringer Rostbratwurst($80k), Raclette Courdavault($71k).",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Louisiana Hot Spiced Okra(-61.81%), Tofu (-56.06%), Chocolade (-49.12%) products experienced negative YoY growth percentages, indicating a decline in performance during the fiscal year 2014-2015.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Sea Food experienced a year-over-year (YoY) growth of 127.64% in the Customer Category.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Sea Food category, Konbu performed exceptionally well, experiencing a year-over-year (YOY) growth percentage of 621.48%.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Meat & Poultry category, Thuringer Rostbratwurst has a (YOY) growth percentage of 144.54%.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Produce category, Uncle Bob's Organic Dried Pears has a (YOY) growth percentage of 486.35%.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Dairy Products category, Queso Manchego La Pastora has a (YOY) growth percentage of 357.40%.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Condimnets category, Grandma's Boysenberry Spread has a (YOY) growth percentage of 791.25%. making it the highest-growing product.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Beverages category, Laughing Lumberjack Lager has a (YOY) growth percentage of 228%.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Grains & Cereals category, Gustaf's Kanckerbrod has a (YOY) growth percentage of 688.78%.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Confections category, Sie Rodney's Scones has a (YOY) growth percentage of 160.98%.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Discontinued Product",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontFamily": "Georgia",
+                      "fontStyle": "italic",
+                      "fontSize": "16pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "There were 8 Discontinued Products. Meat & Poultry has the most discontinued products (4)",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Total Sales % of Discontinued Products is 14.16%. Quantity sold 5301.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Out of the 14.16% of sales generated by Discontinued Products, 11.13% were from the Meat & Poultry category, with top-performing Thuringer Rostbratwurst being one of them, followed by Alice Mutton.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Top 3rd Customer Company Save-a-lot Markets is experiencing an impact on its sales due to discontinued products.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "In Shippers Company, United Package delivers 51.79% of the discontinued products sales. 7.57% in the overall sales.",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Discontinued Products performed well in the months of December ($21k), February ($28K) & April ($33K)",
+                    "textStyle": {
+                      "fontFamily": "Times New Roman",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ],
+                "listType": "bullet"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "100D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Key Insights'"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Georgia'"
+                }
+              }
+            },
+            "heading": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Heading2'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "20D"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "italic": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "divider": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "spacing": [
+        {
+          "properties": {
+            "verticalSpacing": {
+              "expr": {
+                "Literal": {
+                  "Value": "20D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

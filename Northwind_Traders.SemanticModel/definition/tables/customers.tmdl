@@ -1,0 +1,200 @@
+table customers
+	lineageTag: 27940246-8f25-42a8-8981-8e9ca39d7b8f
+
+	measure Cities = DISTINCTCOUNT(customers[city])
+		formatString: 0
+		lineageTag: abdc85d1-b56e-4154-8b14-444962db047f
+
+	measure countries = DISTINCTCOUNT(customers[country])
+		formatString: 0
+		lineageTag: 3583d627-ab20-43b5-b72d-ccf73b171082
+
+	measure CitiesTooltip = ```
+			
+			VAR TopCity = 
+			    TOPN(
+			        1,
+			        ALLSELECTED('customers'[city]),
+			        [Total Revenue],
+			        DESC
+			    )
+			VAR TopCityName = CONCATENATEX(TopCity, 'customers'[city], ", ")
+			VAR TopCityRevenue = 
+			    CALCULATE(
+			        [Total Revenue],
+			        KEEPFILTERS('customers'[city] IN TopCity)
+			    )
+			RETURN
+			"Number of unique cities with orders." & UNICHAR(10) &
+			"Top city by revenue: " & TopCityName & " (" & FORMAT(TopCityRevenue, "$#,##0") & ")" & UNICHAR(10) &
+			"Use to assess geographic reach."
+			```
+		lineageTag: 4cd4a0b4-db80-4912-a0b4-357a7edabbbc
+
+	measure CountriesTooltip = ```
+			
+			VAR CountryCount = DISTINCTCOUNT('customers'[country])
+			VAR TopCountry = 
+			    TOPN(
+			        1,
+			        ALLSELECTED('customers'[country]),
+			        [Total Revenue],
+			        DESC
+			    )
+			VAR TopCountryName = CONCATENATEX(TopCountry, 'customers'[country], ", ")
+			VAR TopCountryRevenue = 
+			    CALCULATE(
+			        [Total Revenue],
+			        KEEPFILTERS('customers'[country] IN TopCountry)
+			    )
+			RETURN
+			"Number of unique countries with orders." & UNICHAR(10) &
+			"Top country by revenue: " & TopCountryName & " (" & FORMAT(TopCountryRevenue, "$#,##0") & ")" & UNICHAR(10) &
+			"Consider expansion or marketing per region."
+			```
+		lineageTag: 76d58e19-d8fb-41c7-9e74-d8f13c2a3133
+
+	measure CompanyOrderCountTooltip = ```
+			
+			VAR CurrentCompany = SELECTEDVALUE('customers'[companyName])
+			VAR OrderCount = [Total Orders]   -- assuming this measure respects customer filter
+			VAR Revenue = [Total Revenue]
+			VAR RankOrders = 
+			    RANKX(
+			        ALLSELECTED('customers'[companyName]),
+			        [Total Orders],
+			        ,
+			        DESC,
+			        Dense
+			    )
+			VAR Message = 
+			    SWITCH(
+			        TRUE(),
+			        RankOrders = 1, "🏆 Most orders from this company.",
+			        RankOrders = 2, "🥈 Second most orders.",
+			        RankOrders = 3, "🥉 Third most orders.",
+			        "Rank #" & RankOrders & " in order volume."
+			    )
+			RETURN
+			"Total revenue: " & FORMAT(Revenue, "$#,##0") & UNICHAR(10) &
+			Message
+			```
+		lineageTag: 445cca34-737f-4ffe-af9c-e70222f9bfef
+
+	measure CityRevenueTooltip = ```
+			
+			VAR CurrentCity = SELECTEDVALUE('customers'[city])
+			VAR Revenue = [Total Revenue]
+			VAR RankCity = 
+			    RANKX(
+			        ALLSELECTED('customers'[city]),
+			        [Total Revenue],
+			        ,
+			        DESC,
+			        Dense
+			    )
+			VAR TopCity = 
+			    TOPN(1, ALLSELECTED('customers'[city]), [Total Revenue], DESC)
+			VAR TopCityName = CONCATENATEX(TopCity, 'customers'[city], ", ")
+			VAR Message = 
+			    IF(
+			        CurrentCity = TopCityName,
+			        "🏆 Top revenue city.",
+			        "Rank #" & RankCity & " in revenue."
+			    )
+			RETURN
+			Message
+			```
+		lineageTag: ad66219e-b685-4a07-8244-b9aa42a038b4
+
+	measure ContactTitleTooltip = ```
+			
+			VAR CurrentTitle = SELECTEDVALUE('customers'[contactTitle])
+			VAR Revenue = [Total Revenue]
+			VAR RankTitle = 
+			    RANKX(
+			        ALLSELECTED('customers'[contactTitle]),
+			        [Total Revenue],
+			        ,
+			        DESC,
+			        Dense
+			    )
+			VAR TopTitle = 
+			    TOPN(1, ALLSELECTED('customers'[contactTitle]), [Total Revenue], DESC)
+			VAR TopTitleName = CONCATENATEX(TopTitle, 'customers'[contactTitle], ", ")
+			VAR Message = 
+			    IF(
+			        CurrentTitle = TopTitleName,
+			        "🏆 Top revenue job title.",
+			        "Rank #" & RankTitle & " in revenue."
+			    )
+			RETURN
+			Message
+			```
+		lineageTag: 792f79a1-f5f3-49dd-a700-b9dcc906ee67
+
+	column customerID
+		dataType: string
+		lineageTag: c1718153-d47f-4d75-88c3-9c3adcfc6894
+		summarizeBy: none
+		sourceColumn: customerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column companyName
+		dataType: string
+		lineageTag: 9bb1f3da-a901-4fd7-b938-9bb6a15ab902
+		summarizeBy: none
+		sourceColumn: companyName
+
+		annotation SummarizationSetBy = Automatic
+
+	column contactName
+		dataType: string
+		lineageTag: 61637de0-a0ad-4dbf-be80-ee962dd62165
+		summarizeBy: none
+		sourceColumn: contactName
+
+		annotation SummarizationSetBy = Automatic
+
+	column contactTitle
+		dataType: string
+		lineageTag: 9b7ea55f-b9ab-4d3a-a0db-1dc9ae4c16a5
+		summarizeBy: none
+		sourceColumn: contactTitle
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: fb68a73b-1642-4970-b942-e34e47bf9174
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column country
+		dataType: string
+		lineageTag: 3a250a07-a69d-4048-902f-b41972433a22
+		summarizeBy: none
+		sourceColumn: country
+
+		annotation SummarizationSetBy = Automatic
+
+	partition customers = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("E:\TP_DataViz\Project\Project Northwind\Northwind Traders\customers.csv"),[Delimiter=",", Columns=6, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}, {"Column2", type text}, {"Column3", type text}, {"Column4", type text}, {"Column5", type text}, {"Column6", type text}}),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Changed Type", [PromoteAllScalars=true]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers",{{"customerID", type text}, {"companyName", type text}, {"contactName", type text}, {"contactTitle", type text}, {"city", type text}, {"country", type text}}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Changed Type1",{{"companyName", Text.Trim, type text}, {"contactTitle", Text.Trim, type text}, {"city", Text.Trim, type text}, {"country", Text.Trim, type text}}),
+				    #"Trimmed Text1" = Table.TransformColumns(#"Trimmed Text",{{"companyName", Text.Trim, type text}, {"contactName", Text.Trim, type text}, {"contactTitle", Text.Trim, type text}, {"city", Text.Trim, type text}, {"country", Text.Trim, type text}})
+				in
+				    #"Trimmed Text1"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

@@ -1,0 +1,309 @@
+table FiscalCalendar
+	lineageTag: 09af19cd-554a-42bb-adfb-244759518816
+
+	measure 'Fiscal Sales Same Period Last Year' = ```
+			
+			CALCULATE(
+			    [Total Revenue], 
+			    SAMEPERIODLASTYEAR('FiscalCalendar'[CalendarDate])
+			)
+			```
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 419d8536-f580-43e2-807a-2674197c42ae
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Fiscal YoY Growth %' = ```
+			
+			IF(
+			    ISFILTERED(FiscalCalendar[Fiscal Year]),
+			    DIVIDE(
+			        [Total Revenue] - [Fiscal Sales Same Period Last Year], 
+			        [Fiscal Sales Same Period Last Year], 
+			        0
+			    ),
+			    BLANK()
+			)
+			```
+		lineageTag: 54b64bef-3893-4014-a95f-99c152d33e7a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Mean = ```
+			
+			VAR Growth = [Fiscal YoY Growth %]  // replace with actual measure or calculation
+			VAR GrowthPercent = FORMAT(Growth, "0.00%")
+			VAR Message = 
+			    SWITCH(
+			        TRUE(),
+			        Growth = 0, "No change from last year.",
+			        Growth > 0, "Business expanding.",
+			        Growth < 0, "Business declining."
+			    )
+			RETURN
+			": " & Message & UNICHAR(10) &
+			"Compare to same period last year."
+			```
+		lineageTag: 03a996f6-a28e-4439-8a17-e4c0189bba66
+
+	measure Message = ```
+			
+			VAR CurrentMonth = SELECTEDVALUE('FiscalCalendar'[MonthName])
+			VAR CurrentYear = SELECTEDVALUE('FiscalCalendar'[Fiscal Year])
+			VAR CurrentRevenue = [Total Revenue]
+			
+			-- Build table of months only for the SAME fiscal year
+			VAR MonthsTable = 
+			    FILTER(
+			        ALLSELECTED('FiscalCalendar'),
+			        'FiscalCalendar'[Fiscal Year] = CurrentYear
+			    )
+			
+			-- Summarize and SKIP months with no data (e.g., incomplete months like June 2015)
+			VAR Summary = 
+			    FILTER(
+			        SUMMARIZE(
+			            MonthsTable,
+			            'FiscalCalendar'[Fiscal Year],
+			            'FiscalCalendar'[MonthName],
+			            "Revenue", [Total Revenue]
+			        ),
+			        [Revenue] <> BLANK() // This dynamically skips months lacking data
+			    )
+			
+			-- Peak and lowest within that year (calculated only from valid data)
+			VAR PeakRow = TOPN(1, Summary, [Revenue], DESC)
+			VAR PeakYear = MAXX(PeakRow, [Fiscal Year])
+			VAR PeakMonth = MAXX(PeakRow, [MonthName])
+			VAR PeakRevenue = MAXX(PeakRow, [Revenue])
+			
+			VAR LowestRow = TOPN(1, Summary, [Revenue], ASC)
+			VAR LowestYear = MAXX(LowestRow, [Fiscal Year])
+			VAR LowestMonth = MAXX(LowestRow, [MonthName])
+			VAR LowestRevenue = MAXX(LowestRow, [Revenue])
+			
+			VAR AvgThreshold = DIVIDE(PeakRevenue + LowestRevenue, 2)
+			
+			VAR PerformanceMessage = 
+			    SWITCH(
+			        TRUE(),
+			        ISBLANK(CurrentRevenue), "⚠️ No data available for this month.",
+			        CurrentRevenue = PeakRevenue, "✨ The highest income month! ✨",
+			        CurrentRevenue = LowestRevenue, "⚠️ Lowest income month – investigate causes ⚠️",
+			        CurrentRevenue > AvgThreshold, "📈 Profits well above average.",
+			        CurrentRevenue < AvgThreshold, "📉 Did not perform well below average.",
+			        "Average performance."
+			    )
+			
+			RETURN
+			    PerformanceMessage& UNICHAR(10) &
+			    "Peak month: " & PeakMonth & " (" & FORMAT(PeakRevenue, "$#,##0") & ")" & UNICHAR(10) &
+			    "Lowest month: " & LowestMonth & " (" & FORMAT(LowestRevenue, "$#,##0") & ")"
+			```
+		lineageTag: 2caaf510-8c1e-4fcf-930f-2f61d02398b7
+
+	measure M = ```
+			
+			VAR TopCategory = 
+			    TOPN(1, 
+			        VALUES('categories'[categoryName]), 
+			        [Total Revenue], 
+			        DESC
+			    )
+			VAR TopCatName = CONCATENATEX(TopCategory, 'categories'[categoryName], ", ")
+			VAR TopCatRevenue = 
+			    CALCULATE([Total Revenue], 
+			        KEEPFILTERS('categories'[categoryName] IN TopCategory)
+			    )
+			RETURN
+			"Gross revenue " & FORMAT([Gross Revenue], "$#,##0.00") & UNICHAR(10) &
+			"discounts " & FORMAT([Discount Value], "$#,##0.00") & UNICHAR(10) &
+			"Top category: " & TopCatName & " (" & FORMAT(TopCatRevenue, "$#,##0.00") & ")"
+			```
+		lineageTag: 8100803c-7a2d-44bc-a071-587c73776722
+
+	measure MonthSaleTooltip = ```
+			
+			VAR CurrentMonth = SELECTEDVALUE('FiscalCalendar'[MonthName])
+			VAR CurrentRevenue = [Total Revenue]
+			-- Build a table of all months in current context with their revenue
+			VAR MonthsTable = 
+			    FILTER(
+			        SUMMARIZE(
+			        ALLSELECTED('FiscalCalendar'),
+			        'FiscalCalendar'[MonthName],
+			        "Revenue", [Total Revenue]
+			    ),
+			    [Revenue] <> BLANK()
+			    )
+			VAR PeakRow = TOPN(1, MonthsTable, [Revenue], DESC)
+			VAR PeakMonthName = MAXX(PeakRow, [MonthName])
+			VAR PeakRevenue = MAXX(PeakRow, [Revenue])
+			VAR LowestRow = TOPN(1, MonthsTable, [Revenue], ASC)
+			VAR LowestMonthName = MAXX(LowestRow, [MonthName])
+			VAR LowestRevenue = MAXX(LowestRow, [Revenue])
+			VAR AvgThreshold = (PeakRevenue + LowestRevenue) / 2
+			VAR PerformanceMessage = 
+			    SWITCH(
+			        TRUE(),
+			        CurrentRevenue = PeakRevenue && PeakRevenue > 0, "✨ The most income month! ✨",
+			        CurrentRevenue = LowestRevenue && LowestRevenue > 0, "⚠️ Low income month⚠️",
+			        CurrentRevenue > AvgThreshold, "📈 The month that profits well above average.",
+			        CurrentRevenue < AvgThreshold, "📉 The month that did not perform well.",
+			        "Average performance."
+			    )
+			RETURN
+			PerformanceMessage & UNICHAR(10) &
+			CurrentMonth & ": " & FORMAT(CurrentRevenue, "$#,##0") & UNICHAR(10) &
+			"Peak month: " & PeakMonthName & " (" & FORMAT(PeakRevenue, "$#,##0") & ")" & UNICHAR(10) &
+			"Lowest month: " & LowestMonthName & " (" & FORMAT(LowestRevenue, "$#,##0") & ")"
+			```
+		lineageTag: 6e0116d9-8266-4957-8737-82c146dc1333
+
+	measure MonthDiscontinuedTooltip = ```
+			
+			VAR CurrentMonth = SELECTEDVALUE('FiscalCalendar'[MonthName])
+			VAR Discontinued = [Discontinued Products Sale]
+			-- Build a table of all months in current context with their revenue
+			VAR MonthsTable = 
+			    FILTER(
+			        SUMMARIZE(
+			        ALLSELECTED('FiscalCalendar'),
+			        'FiscalCalendar'[MonthName],
+			        "Dicontinued", [Discontinued Products Sale]
+			    ),
+			    [Dicontinued] <> BLANK()
+			    )
+			VAR PeakRow = TOPN(1, MonthsTable, [Dicontinued], DESC)
+			VAR PeakMonthName = MAXX(PeakRow, [MonthName])
+			VAR PeakRevenue = MAXX(PeakRow, [Dicontinued])
+			VAR LowestRow = TOPN(1, MonthsTable, [Dicontinued], ASC)
+			VAR LowestMonthName = MAXX(LowestRow, [MonthName])
+			VAR LowestRevenue = MAXX(LowestRow, [Dicontinued])
+			VAR AvgThreshold = (PeakRevenue + LowestRevenue) / 2
+			VAR PerformanceMessage = 
+			    SWITCH(
+			        TRUE(),
+			        Discontinued = PeakRevenue && PeakRevenue > 0, "✨ The most income month! ✨",
+			        Discontinued = LowestRevenue && LowestRevenue > 0, "⚠️ Low income month⚠️",
+			        Discontinued > AvgThreshold, "📈 The month that profits well above average.",
+			        Discontinued < AvgThreshold, "📉 The month that did not perform well.",
+			        "Average performance."
+			    )
+			RETURN
+			PerformanceMessage & UNICHAR(10) &
+			"Peak month: " & PeakMonthName & " (" & FORMAT(PeakRevenue, "$#,##0") & ")" & UNICHAR(10) &
+			"Lowest month: " & LowestMonthName & " (" & FORMAT(LowestRevenue, "$#,##0") & ")"
+			```
+		lineageTag: 91d764e9-7619-49fe-b7e6-99abb613d1cd
+
+	measure 'Revenue 2014' = ```
+			
+			CALCULATE(
+			    [Total Revenue], 
+			    FiscalCalendar[Fiscal Year] = 2014
+			)
+			```
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 4418d152-e0ca-4c34-af09-26c02b273036
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Revenue 2015' = ```
+			
+			CALCULATE(
+			    [Total Revenue], 
+			    FiscalCalendar[Fiscal Year] = 2015
+			)
+			```
+		formatString: 0.00
+		lineageTag: 0e0ce537-0d5f-4c61-a535-b0a1041ffe95
+
+	measure 'Revenue YoY Growth %' = ```
+			
+			VAR CurrentYearRevenue = [Total Revenue]
+			VAR PreviousYearRevenue = 
+			    CALCULATE(
+			        [Total Revenue], 
+			        FiscalCalendar[Fiscal Year] = MAX(FiscalCalendar[Fiscal Year]) - 1
+			    )
+			RETURN
+			    DIVIDE(
+			        CurrentYearRevenue - PreviousYearRevenue, 
+			        PreviousYearRevenue, 
+			        0
+			    )
+			```
+		lineageTag: a2a9b6cf-641f-4a61-8983-c0721c51b318
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Date
+		formatString: General Date
+		lineageTag: 039b8ae0-800f-47bd-83eb-123d78bbc434
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: 2b739530-83bb-49ed-b761-346d32901e73
+			defaultHierarchy: LocalDateTable_9229e544-0b3b-4e6d-8baf-e58c1b9c8c93.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalendarDate
+		formatString: General Date
+		lineageTag: 4003015a-ae75-48b8-b1aa-4afb10f8a33f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [CalendarDate]
+
+		variation Variation
+			isDefault
+			relationship: 057091ef-e422-40cd-86d6-b7d2e189bab0
+			defaultHierarchy: LocalDateTable_85275355-28a2-4812-81c0-1ecdf5a69fb4.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fiscal Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: 276cec9b-75b8-417b-be8f-1bf6b4ea2a14
+		summarizeBy: sum
+		sourceColumn: [FiscalYear]
+
+		annotation SummarizationSetBy = Automatic
+
+	column FiscalMonthNum
+		formatString: 0
+		lineageTag: c520f581-bac9-4685-9507-67a5a2c21454
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [FiscalMonthNum]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthName
+		lineageTag: 5c300761-5357-4a72-9fdf-c166dd827e4a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthName]
+		sortByColumn: FiscalMonthNum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FiscalCalendar = calculated
+		mode: import
+		source =
+				
+				ADDCOLUMNS(
+				    CALENDAR(DATE(2013, 7, 1), DATE(2015, 6, 30)),
+				    "CalendarDate", [Date],
+				    "FiscalYear", IF(MONTH([Date]) >= 7, YEAR([Date]) + 1, YEAR([Date])),
+				    "FiscalMonthNum", IF(MONTH([Date]) >= 7, MONTH([Date]) - 6, MONTH([Date]) + 6),
+				    "MonthName", FORMAT([Date], "MMM")
+				)
+
+	annotation PBI_Id = 9f1e0ed4e5d14a7fbb9d48d1c9492392
+
