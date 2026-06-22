@@ -63,3 +63,24 @@ The architecture completely avoids row-level filtering or transactional aggregat
    ┌─────────────────┴──┐               ┌──┴─────────────────┐
    │   FiscalCalendar   │               │     employees      │
    └────────────────────┘               └────────────────────┘
+---
+
+## 📈 Analytical Insights Summary
+
+### 1. Financial & Product Performance
+* **The System Footprint:** Processed **\$1.27M Net Revenue** across **830 total orders** and **51K units sold**. Gross revenue reached \$1.35M with **\$88.67K given away in discounts**.
+* **Category Core:** Revenue remains heavily driven by three inventory spaces: **Beverages (\$268K)**, **Dairy Products (\$235K)**, and **Confections (\$167K)**.
+* **The May Collapse Alert:** FY2015 demonstrated strong sales momentum between January and April (climbing past \$124K). However, a sudden **85% collapse down to \$18K in May** was flagged, identifying critical supply chain depletion or structural risk.
+
+### 2. Shipping & Logistics Performance
+* **Carrier Efficiencies:** Out of 830 total orders, **772 orders were delivered on time**, **37 were delayed**, and **21 remain unfulfilled**.
+* **Carrier Operational Turnaround:** * **Federal Shipping:** Most efficient turnaround times, averaging **7–8 days** across 255 orders.
+  * **Speedy Express:** Moderate delivery cycles, averaging **8–9 days** across 249 orders.
+  * **United Package:** Slowest pipeline distribution, averaging **9 days** while handling the largest block of **326 orders**.
+
+---
+
+## 🚀 Future Technical Implementations
+
+* **Predictive Machine Learning Integration:** Embed advanced predictive scripts (Python/R modeling or Azure ML) directly inside the Power BI data loop to automate sales forecasting and evaluate customer churn vulnerabilities.
+* **Parametric What-If Scenarios:** Build dynamic DAX parameters allowing users to run complex real-time business simulations on pricing elasticity, freight adjustments, or carrier realignment strategies.
