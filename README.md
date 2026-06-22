@@ -65,6 +65,7 @@ The architecture completely avoids row-level filtering or transactional aggregat
    └────────────────────┘               └────────────────────┘
 ---
 
+
 ## 📈 Analytical Insights Summary
 
 ### 1. Financial & Product Performance
